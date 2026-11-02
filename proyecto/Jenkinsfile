@@ -50,24 +50,7 @@ pipeline {
         }
 
         // >>> [A-ETAPAS] (Parte A, paso A1): aquí van las etapas "Analyze" y "Dependency Management"
-
-        // >>> [B-DOCS] (Parte B, paso B3): aquí va la etapa "Generate Documentation"
-
-        // >>> [B-VERSION] (Parte B, paso B4): aquí va la etapa "Version Control"
-
-        // >>> [B-DEPLOY] (Parte B, paso B5): aquí va la etapa "Deploy"
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
-        }
-        // >>> [A-POST] (Parte A, paso A4): aquí van las alertas "unstable" y "failure"
-    }
-}
-
-// >>> [A-FUNCION] (Parte A, paso A4): aquí va la función notificar()
-        stage('Analyze') {
+              stage('Analyze') {
             steps {
                 // catchError: si hay hallazgos el build queda INESTABLE (amarillo) pero el pipeline continúa
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
@@ -110,3 +93,21 @@ pipeline {
                 }
             }
         }
+
+        // >>> [B-DOCS] (Parte B, paso B3): aquí va la etapa "Generate Documentation"
+
+        // >>> [B-VERSION] (Parte B, paso B4): aquí va la etapa "Version Control"
+
+        // >>> [B-DEPLOY] (Parte B, paso B5): aquí va la etapa "Deploy"
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
+        }
+        // >>> [A-POST] (Parte A, paso A4): aquí van las alertas "unstable" y "failure"
+    }
+}
+
+// >>> [A-FUNCION] (Parte A, paso A4): aquí va la función notificar()
+  
