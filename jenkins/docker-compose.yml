@@ -1,0 +1,35 @@
+# Laboratorio de la actividad "Sistema Alumnos"
+#
+#   jenkins -> servidor de integración continua  http://localhost:8080
+#              (la aplicación desplegada por el pipeline se ve en http://localhost:5000)
+#   taller  -> la MISMA imagen, pero con tu carpeta ../proyecto montada en /work.
+#              Sirve para ejecutar pipenv, pytest, bandit, doxygen... sin instalar nada en tu equipo.
+#
+# Los puertos se publican solo en 127.0.0.1: nadie más en la red del laboratorio puede entrar a tu Jenkins.
+# No se monta el socket de Docker (/var/run/docker.sock): daría control total del equipo a quien controle Jenkins.
+name: sistema-alumnos
+
+services:
+  jenkins:
+    build: .
+    image: sistema-alumnos-jenkins:latest
+    container_name: jenkins-alumnos
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:5000:5000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  taller:
+    image: sistema-alumnos-jenkins:latest   # reutiliza la imagen que construye "jenkins"
+    pull_policy: never
+    depends_on:
+      - jenkins
+    container_name: taller-alumnos
+    entrypoint: ["sleep", "infinity"]
+    working_dir: /work
+    volumes:
+      - ../proyecto:/work
+
+volumes:
+  jenkins_home:
